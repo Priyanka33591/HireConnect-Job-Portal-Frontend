@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-slate-900 text-slate-100 antialiased;
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.22), transparent 40%),
+      radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.16), transparent 35%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
+    background-attachment: fixed;
+    background-size: cover;
+  }
+}
+
+@layer components {
+.hc-container {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+}
+  .hc-card {
+    @apply rounded-2xl border border-white/15 bg-white/10 shadow-soft backdrop-blur transition hover:border-white/30;
+  }
+  .hc-input {
+    @apply w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-slate-100 placeholder:text-slate-400 outline-none ring-0 transition focus:border-indigo-300/80 focus:bg-white/15;
+  }
+  .hc-select {
+    @apply w-full rounded-xl border border-white/15 bg-white/10 px-3 py-2 text-slate-100 outline-none transition focus:border-indigo-300/80;
+  }
+  .hc-select option {
+    @apply bg-slate-600 text-slate-300;
+  }
+  .hc-btn {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .hc-btn-primary {
+    @apply hc-btn bg-indigo-400 hover:bg-indigo-300 text-slate-950 shadow-lg shadow-indigo-900/20;
+  }
+  .hc-btn-ghost {
+    @apply hc-btn bg-white/5 hover:bg-white/10 text-slate-100;
+  }
+  .hc-badge {
+    @apply inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-slate-200;
+  }
+}
