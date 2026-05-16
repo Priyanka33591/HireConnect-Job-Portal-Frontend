@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Shell from "../components/Shell";
 import { recruiterAnalytics } from "../api/analytics";
 import { listJobs } from "../api/jobs";
+import { http } from "../api/http";
 import { applicationsByJob } from "../api/applications";
 import { getProfileByUserId } from "../api/profiles";
 
@@ -28,7 +29,7 @@ export default function RecruiterAnalyticsPage() {
         // Fetch all interviews to check history for rejected ones
         let allInterviews = [];
         try {
-          const intRes = await fetch("http://localhost:8083/api/interviews").then(r => r.json());
+          const intRes = await http.get("/interviews").then(r => r.data);
           allInterviews = intRes.filter(i => myJobs.some(mj => mj.id === i.jobId));
         } catch {
           allInterviews = [];

@@ -83,10 +83,10 @@ export default function BookmarksPage() {
         )}
 
         {/* split layout */}
-        <div className="flex flex-1 gap-4 min-h-0" style={{ minHeight: "60vh" }}>
+        <div className="flex flex-1 gap-4 items-start">
 
           {/* LEFT — bookmark list */}
-          <div className={`flex flex-col gap-2 overflow-y-auto lg:w-[380px] xl:w-[420px] shrink-0 ${showDetail ? "hidden lg:flex" : "flex w-full"}`}>
+          <div className={`flex flex-col gap-2 lg:w-[380px] xl:w-[420px] shrink-0 ${showDetail ? "hidden lg:flex" : "flex w-full"}`}>
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
@@ -127,7 +127,7 @@ export default function BookmarksPage() {
           </div>
 
           {/* RIGHT — detail panel */}
-          <div className={`flex-1 min-h-0 ${showDetail || "hidden lg:block"}`}>
+          <div className={`flex-1 sticky top-[104px] z-10 ${showDetail || "hidden lg:block"}`}>
             <JobDetailPanel
               job={selectedJob}
               onClose={() => setShowDetail(false)}

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Shell from "../components/Shell";
 import { JobDetailPanel, JobRowCard, pickColor, initials } from "../components/JobShared";
 import { applicationsByCandidate } from "../api/applications";
+import { http } from "../api/http";
 import { listJobs } from "../api/jobs";
 
 // ── Status pill ────────────────────────────────────────────────────────────
@@ -126,7 +127,7 @@ export default function ApplicationsPage() {
         const [appData, jobData, interviewData] = await Promise.all([
           applicationsByCandidate(userId),
           listJobs(),
-          fetch("http://localhost:8083/api/interviews").then(r => r.json()).catch(() => [])
+          http.get("/interviews").then(r => r.data).catch(() => [])
         ]);
         setApps(appData ?? []);
         setJobs(jobData ?? []);
@@ -178,10 +179,10 @@ export default function ApplicationsPage() {
         )}
 
         {/* split layout */}
-        <div className="flex flex-1 gap-4 min-h-0" style={{ minHeight: "60vh" }}>
+        <div className="flex flex-1 gap-4 items-start">
 
           {/* LEFT — application list */}
-          <div className={`flex flex-col gap-2 overflow-y-auto lg:w-[380px] xl:w-[420px] shrink-0 ${showDetail ? "hidden lg:flex" : "flex w-full"}`}>
+          <div className={`flex flex-col gap-2 lg:w-[380px] xl:w-[420px] shrink-0 ${showDetail ? "hidden lg:flex" : "flex w-full"}`}>
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
@@ -218,7 +219,7 @@ export default function ApplicationsPage() {
           </div>
 
           {/* RIGHT — detail panel */}
-          <div className={`flex-1 min-h-0 overflow-y-auto ${showDetail || "hidden lg:block"}`}>
+          <div className={`flex-1 sticky top-[104px] z-10 ${showDetail || "hidden lg:block"}`}>
             {selectedApp ? (
               <div className="flex flex-col gap-4">
 

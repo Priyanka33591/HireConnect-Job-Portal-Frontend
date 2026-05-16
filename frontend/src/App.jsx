@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import { NotificationProvider } from "./context/NotificationContext";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import OAuthCallbackPage from "./pages/OAuthCallbackPage";
@@ -30,9 +31,12 @@ function RequireRole({ allow, children }) {
   return children;
 }
 
+
+
 export default function App() {
   return (
-    <Routes>
+    <NotificationProvider>
+      <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       {/* Google OAuth2 callback — receives JWT tokens from the backend redirect */}
@@ -182,5 +186,6 @@ export default function App() {
       />
       <Route path="*" element={<Navigate to="/jobs" replace />} />
     </Routes>
+    </NotificationProvider>
   );
 }

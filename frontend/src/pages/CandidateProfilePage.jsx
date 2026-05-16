@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Shell from "../components/Shell";
+import { useNotifications } from "../context/NotificationContext";
 import {
   createCandidateProfile,
   getProfileByUserId,
@@ -40,6 +41,8 @@ export default function CandidateProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [activeTab, setActiveTab] = useState("profile"); // profile or notifications
+  const { notifications, markRead, markAllAsRead } = useNotifications();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState(emailFromSession);
@@ -251,21 +254,48 @@ export default function CandidateProfilePage() {
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4">
-          <div className="flex-1">
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-white">Profile Completion</span>
-              <span className="text-sm font-medium text-indigo-400">{completion}%</span>
-            </div>
-            <div className="w-full bg-slate-700 rounded-full h-2">
-              <div className="bg-indigo-500 h-2 rounded-full transition-all duration-500" style={{ width: `${completion}%` }}></div>
-            </div>
-          </div>
-          <div className="text-xs text-slate-400 w-48 hidden sm:block">
-            {completion < 100 ? "Complete your profile to stand out to recruiters." : "Great job! Your profile is complete."}
-          </div>
+        {/* Tabs */}
+        <div className="flex border-b border-white/10">
+          <button
+            onClick={() => setActiveTab("profile")}
+            className={`px-6 py-3 text-sm font-medium transition-all ${
+              activeTab === "profile"
+                ? "border-b-2 border-indigo-500 text-white"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            Profile Details
+          </button>
+          <button
+            onClick={() => setActiveTab("notifications")}
+            className={`px-6 py-3 text-sm font-medium transition-all ${
+              activeTab === "notifications"
+                ? "border-b-2 border-indigo-500 text-white"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            Notifications
+          </button>
         </div>
+
+        {activeTab === "profile" ? (
+          <>
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4">
+              <div className="flex-1">
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm font-medium text-white">Profile Completion</span>
+                  <span className="text-sm font-medium text-indigo-400">{completion}%</span>
+                </div>
+                <div className="w-full bg-slate-700 rounded-full h-2">
+                  <div className="bg-indigo-500 h-2 rounded-full transition-all duration-500" style={{ width: `${completion}%` }}></div>
+                </div>
+              </div>
+              <div className="text-xs text-slate-400 w-48 hidden sm:block">
+                {completion < 100 ? "Complete your profile to stand out to recruiters." : "Great job! Your profile is complete."}
+              </div>
+            </div>
+          </>
+        ) : null}
 
         {error && (
           <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
@@ -282,9 +312,8 @@ export default function CandidateProfilePage() {
           <div className="flex flex-col gap-4">
             <div className="h-48 animate-pulse rounded-2xl bg-white/5 border border-white/10" />
             <div className="h-48 animate-pulse rounded-2xl bg-white/5 border border-white/10" />
-            <div className="h-48 animate-pulse rounded-2xl bg-white/5 border border-white/10" />
           </div>
-        ) : (
+        ) : activeTab === "profile" ? (
           <form className="flex flex-col gap-6" onSubmit={handleSave}>
             
             {/* --- Hero Section: Basic Info --- */}
@@ -784,6 +813,68 @@ export default function CandidateProfilePage() {
             </section>
 
           </form>
+        ) : (
+          <div className="flex flex-col gap-4">
+             <div className="flex items-center justify-between px-2">
+                <h3 className="text-lg font-semibold text-white">Recent Alerts</h3>
+                {notifications.some(n => !n.read) && (
+                  <button onClick={markAllAsRead} className="text-sm text-indigo-400 hover:text-indigo-300">
+                    Mark all as read
+                  </button>
+                )}
+             </div>
+             
+             {notifications.length === 0 ? (
+               <div className="hc-card p-20 text-center flex flex-col items-center gap-4">
+                  <div className="h-16 w-16 rounded-full bg-white/5 flex items-center justify-center text-slate-500">
+                    <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">No notifications yet</p>
+                    <p className="text-sm text-slate-400">We'll notify you here when you have new updates.</p>
+                  </div>
+               </div>
+             ) : (
+               <div className="flex flex-col gap-3">
+                 {notifications.map(notif => (
+                   <div 
+                    key={notif.id}
+                    className={`hc-card p-5 flex gap-4 items-start transition-all ${!notif.read ? 'border-indigo-500/50 bg-indigo-500/5 shadow-indigo-500/10' : ''}`}
+                   >
+                     <div className={`mt-1 p-2 rounded-xl ${
+                        notif.type === 'INTERVIEW' ? 'bg-amber-500/20 text-amber-500' :
+                        notif.type === 'APPLICATION' ? 'bg-emerald-500/20 text-emerald-500' :
+                        'bg-indigo-500/20 text-indigo-500'
+                      }`}>
+                        {notif.type === 'INTERVIEW' ? (
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        ) : (
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        )}
+                     </div>
+                     <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <p className={`text-sm ${!notif.read ? 'font-semibold text-white' : 'text-slate-300'}`}>
+                            {notif.message}
+                          </p>
+                          {!notif.read && (
+                            <button 
+                              onClick={() => markRead(notif.id)}
+                              className="text-[10px] uppercase tracking-wider font-bold text-indigo-400 hover:text-indigo-300"
+                            >
+                              Mark as read
+                            </button>
+                          )}
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500">
+                          {new Date(notif.createdAt).toLocaleString()}
+                        </p>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+             )}
+          </div>
         )}
       </div>
     </Shell>

@@ -84,7 +84,7 @@ export function JobDetailPanel({ job, onClose, extraBadge, footerSlot }) {
   const isOpen = job.status === "OPEN";
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/15 bg-white/5 backdrop-blur">
+    <div className="flex flex-col rounded-2xl border border-white/15 bg-white/5 backdrop-blur">
       {/* ── header ── */}
       <div className="border-b border-white/10 p-5">
         <div className="flex items-start gap-4">
@@ -124,7 +124,7 @@ export function JobDetailPanel({ job, onClose, extraBadge, footerSlot }) {
             <button
               type="button"
               onClick={onClose}
-              className="lg:hidden rounded-lg p-1.5 text-slate-400 hover:text-white hover:bg-white/10 transition"
+              className="rounded-lg p-1.5 text-slate-400 hover:text-white hover:bg-white/10 transition"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -187,7 +187,7 @@ export function JobDetailPanel({ job, onClose, extraBadge, footerSlot }) {
       </div>
 
       {/* ── scrollable body ── */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-5">
+      <div className="p-5 space-y-5">
         {job.skills && (
           <section>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">

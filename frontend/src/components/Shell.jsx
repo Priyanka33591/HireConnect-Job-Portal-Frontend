@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { getProfileByUserId } from "../api/profiles";
 import { getCurrentSubscription } from "../api/subscriptions";
+import NotificationCenter from "./NotificationCenter";
 
 function cn(...parts) {
   return parts.filter(Boolean).join(" ");
@@ -263,6 +264,7 @@ export default function Shell({ children }) {
           </nav>
 
           <div className="flex items-center gap-3">
+            {isAuthenticated && <NotificationCenter />}
             {isAuthenticated ? (
               <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
                 <div className="grid h-7 w-7 place-items-center rounded-lg bg-indigo-500/30 text-xs font-semibold text-indigo-100">

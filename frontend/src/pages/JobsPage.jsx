@@ -157,10 +157,10 @@ export default function JobsPage() {
         {message && <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">{message}</div>}
 
         {/* split layout */}
-        <div className="flex flex-1 gap-4 min-h-0" style={{ minHeight: "60vh" }}>
+        <div className="flex flex-1 gap-4 items-start">
 
           {/* LEFT — job list */}
-          <div className={`flex flex-col gap-2 overflow-y-auto lg:w-[380px] xl:w-[420px] shrink-0 ${showDetail ? "hidden lg:flex" : "flex w-full"}`}>
+          <div className={`flex flex-col gap-2 lg:w-[380px] xl:w-[420px] shrink-0 ${showDetail ? "hidden lg:flex" : "flex w-full"}`}>
             {loading ? (
               Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
@@ -210,7 +210,7 @@ export default function JobsPage() {
           </div>
 
           {/* RIGHT — detail */}
-          <div className={`flex-1 min-h-0 ${showDetail || "hidden lg:block"}`}>
+          <div className={`flex-1 sticky top-[104px] z-10 ${showDetail || "hidden lg:block"}`}>
             <JobDetailPanel
               job={selectedJob}
               onClose={() => setShowDetail(false)}
